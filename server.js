@@ -45,5 +45,5 @@ http.createServer(async(req,res)=>{
  if(pathname!=='/login.html'&&!auth(req)){res.writeHead(302,{Location:'/login.html',...headers});return res.end() }
  if(pathname==='/login.html'&&auth(req)){res.writeHead(302,{Location:'/',...headers});return res.end()}
 const file = await readFile(path.join(base,pathname));
- try{const file=await readFile(path.join(base,'public',pathname));res.writeHead(200,{'Content-Type':types[path.extname(pathname)],...headers});res.end(file)}catch{res.writeHead(404);res.end('Not found')}
-}).listen(PORT,()=>console.log(`CookieGPT at http://localhost:${PORT}`));
+
+try{const file=await readFile(path.join(base,pathname.slice(1)));res.writeHead(200,{'Content-Type':types[path.extname(pathname)],...headers});res.end(file)}catch{res.writeHead(404);res.end('Not found')}
