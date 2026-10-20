@@ -47,3 +47,37 @@ http.createServer(async(req,res)=>{
 const file = await readFile(path.join(base,pathname));
 
 try{const file=await readFile(path.join(base,pathname.slice(1)));res.writeHead(200,{'Content-Type':types[path.extname(pathname)],...headers});res.end(file)}catch{res.writeHead(404);res.end('Not found')}
+ // Serve website files
+ const allowedFiles = new Set([
+  '/index.html',
+  '/login.html',
+  '/app.js',
+  '/styles.css'
+ ]);
+
+ if (!allowedFiles.has(pathname)) {
+  res.writeHead(404, headers);
+  return res.end('Not found');
+ }
+
+ try {
+  // Files are in the same folder as server.js
+  const file = await readFile(
+   path.join(base, pathname.slice(1))
+  );
+
+  res.writeHead(200, {
+   'Content-Type': types[path.extname(pathname)],
+   ...headers
+  });
+
+  res.end(file);
+ } catch (error) {
+  console.error('File serving error:', error.message);
+  res.writeHead(404, headers);
+  res.end('Not found');
+ }
+
+}).listen(PORT, '0.0.0.0', () => {
+ console.log(`CookieGPT running on port ${PORT}`);
+});
